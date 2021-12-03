@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  @include('layouts.head')
+  @include('layouts.partial.head')
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
   <header class="main-header">
-    @include('layouts.header')
+    @include('layouts.partial.mainheader')
   </header>
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
-    @include('layouts.mainsidebar')
+    @include('layouts.partial.mainsidebar')
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -33,7 +33,7 @@
 
     <!-- Main content -->
     <section class="content">
-     @include('layouts.content')
+     @include('layouts.partial.content')
      </section>
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -221,12 +221,12 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-   @include('layouts.footer')
+   @include('layouts.partial.footer')
   </footer>
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark" style="display: none;">
-   @include('layouts.controlsidebar')
+   @include('layouts.partial.controlsidebar')
   </aside>
   <!-- /.control-sidebar -->
   <!-- Add the sidebar's background. This div must be placed
