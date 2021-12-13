@@ -8,9 +8,8 @@ use GuzzleHttp\Client;
 
 class LoginController extends Controller
 {
-    //
-
-         public function authenticate(Request $request)
+    
+    public function authenticate(Request $request)
         {
              $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -23,26 +22,32 @@ class LoginController extends Controller
         public function loginForm(Request $request)
         {
             $client = new \GuzzleHttp\Client();;
-            $request = $client->get('http://localhost:8001/LoginController/get/'.$request);
+            $request = $client->get('http://localhost:8001/Employee/login/'.$option);
             $response = $request->getBody()->getContents();
             
             return $data = json_decode($response, true);
         }
 
-
-        public function doLogin($Request $request)
+        
+        public function doLogin(Request $request) 
         {
-            $client = new Client();
-            $option = [
-                'header'=> [
-                'Accept'=> 'application/json',
-              'Content-Type' => 'application/json',
-            ],
-            'json'=> $request->all ()
-        };
-            $responseService= $client->request9('GET', env(''). '/', $option)
-            $response
+            $client = new \GuzzleHttp\Client();;
+            $request = $client->post('http://localhost:8001/Employee/login/'.$option);
+            $response = $request->getBody()->getContents();
             
+            return $data = json_decode($response, true);
+        }
+    
+
+}
+
+        
+    
+
+
+
+
+
 
 
 
