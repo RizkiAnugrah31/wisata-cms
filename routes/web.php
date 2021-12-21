@@ -16,10 +16,14 @@ use App\Http\Controller\LoginController;
 |
 */
 
-$router->get('/', function () {
+Route::get('/', function () {
     return view('layouts.master');
-});
+})->name('dashboard');
 
 $router->post('/Employee/login','Cms\AuthEmployeeController@login');
 
-
+Route::prefix('employees')->group(function () {
+    Route::name('employee.')->group(function () {
+        Route::get('/', 'EmployeeController@index')->name('index');
+    });
+});
