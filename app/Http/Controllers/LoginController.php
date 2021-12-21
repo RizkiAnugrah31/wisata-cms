@@ -2,54 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class LoginController extends Controller
 {
-    
-    public function authenticate(Request $request)
-        {
-             $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-            ]);
+    public function loginForm()
+    {
+        if (!\request()->session()->has('token')) {
+            $client = new Client();
+            $options = [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => ' application/json',
+                ],
+                'json' => [
+                    "client_key" => "Android123",
+                    "secret_key" => "Android123"
+                ]
+            ];
+            $responseService = $client->request('POST', env('GATEWAY') . '/Credentials/login', $options);
+            $response = json_decode($responseService->getBody()->getContents(), false);
 
+            if ($response->success) {
+                Session::put('token', $response->data->secret_key);
+            }
         }
 
-
-        public function loginForm(Request $request)
-        {
-            $client = new \GuzzleHttp\Client();;
-            $request = $client->get('http://localhost:8001/Employee/login/'.$option);
-            $response = $request->getBody()->getContents();
-            
-            return $data = json_decode($response, true);
+        if (\request()->session()->has('Authorization')){
+            return redirect('/');
         }
 
-        
-        public function doLogin(Request $request) 
-        {
-            $client = new \GuzzleHttp\Client();;
-            $request = $client->post('http://localhost:8001/Employee/login/'.$option);
-            $response = $request->getBody()->getContents();
-            
-            return $data = json_decode($response, true);
-        }
-    
+        return view('auth.login');
+    }
 
+    public function doLogin(Request $request)
+    {
+            $client = new Client();
+            $options = [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => ' application/json',
+                    'Authorization' => 'Bearer ' . \session()->get('token')
+                ],
+                'json' => [
+                    'employee_email' => $request->email,
+                    'employee_password' => $request->password
+                ]
+            ];
+            $responseService = $client->request('POST', env('GATEWAY') . '/Employee/login', $options);
+            $response = json_decode($responseService->getBody()->getContents(), false);
+
+        if ($response->success) {
+            Session::put('Authorization', $response->data->secret_key);
+            return redirect('/');
+        }
+
+        return $request->all();
+    }
+
+    public function logout()
+    {
+        \request()->session()->invalidate();
+        return redirect('/login');
+    }
 }
-
-        
-    
-
-
-
-
-
-
-
-
-
-    
