@@ -24,6 +24,7 @@
             <a href="{{ route('dashboard') }}">
                 <i class="fa fa-tachometer"></i>
                 <span>Dashboard</span>
+<<<<<<< HEAD
             </a>
         </li>
         <li {!! url()->current() === route('employee.index') ? 'class="active"' : '' !!}>
@@ -31,6 +32,20 @@
                 <i class="fa fa-users"></i>
                 <span>Employees</span>
             </a>
+=======
+            </a>
+        </li>
+        <li class="{{ in_array(url()->current(), [route('employee.index'), route('employee.add')]) ? 'active menu-open' : '' }} treeview">
+            <a href="#">
+                <i class="fa fa-users"></i>
+                <span>Dashboard</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            </a>
+            <ul class="treeview-menu">
+                <li {!! url()->current() === route('employee.index') ? 'class="active"' : '' !!}><a href="{{ route('employee.index') }}"><i class="fa fa-circle-o"></i> List</a></li>
+                <li {!! url()->current() === route('employee.add') ? 'class="active"' : '' !!}><a href="{{ route('employee.add') }}"><i class="fa fa-circle-o"></i> Add</a></li>
+            </ul>
+>>>>>>> 1b4e5e590fdf0bfafae4a106ce52970c501e9399
         </li>
     </ul>
 </section>

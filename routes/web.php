@@ -25,5 +25,11 @@ $router->post('/Employee/login','Cms\AuthEmployeeController@login');
 Route::prefix('employees')->group(function () {
     Route::name('employee.')->group(function () {
         Route::get('/', 'EmployeeController@index')->name('index');
+<<<<<<< HEAD
+=======
+        Route::get('add', 'EmployeeController@add')->name('add');
+
+        Route::post('add', 'EmployeeController@add_process');
+>>>>>>> 1b4e5e590fdf0bfafae4a106ce52970c501e9399
     });
 });
