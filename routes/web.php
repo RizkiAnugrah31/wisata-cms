@@ -22,13 +22,8 @@ Route::get('/', function () {
 
 $router->post('/Employee/login','Cms\AuthEmployeeController@login');
 
-Route::get('/login', 'LoginController@LoginForm');
-Route::post('login', 'LoginController@doLogin')->name('login');
-Route::get('/logout','LoginController@logout')->name('logout');
-
 Route::prefix('employees')->group(function () {
     Route::name('employee.')->group(function () {
         Route::get('/', 'EmployeeController@index')->name('index');
-        Route::get('add', 'EmployeeController@add')->name('add');
     });
 });
