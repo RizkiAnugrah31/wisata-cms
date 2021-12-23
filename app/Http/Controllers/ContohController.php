@@ -11,7 +11,7 @@ class ContohController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class ContohController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
      */
     public function create()
     {
@@ -36,7 +36,10 @@ class ContohController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->only('example_name', 'example_phone'));
+        $validator = Validator::make($request->only('example_name', 'example_phone'), [
+            'example_name' => 'required',
+            'example_phone'=> 'required'
+        ]);
 
         if ($validator->fails()) {
             return redirect()->route('contoh.create');
@@ -63,7 +66,7 @@ class ContohController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
      */
     public function edit($id)
     {
@@ -76,7 +79,6 @@ class ContohController extends Controller
         ];
         $responseService = $client->request('GET', env('GATEWAY') . '/contoh/' . $id, $options);
         $response = json_decode($responseService->getBody()->getContents(), false);
-
         dd($response);
     }
 
@@ -85,7 +87,7 @@ class ContohController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
@@ -96,7 +98,7 @@ class ContohController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
