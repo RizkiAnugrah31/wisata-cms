@@ -16,10 +16,21 @@ use App\Http\Controller\LoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('layouts.master');
+Route::get('/login', 'LoginController@loginForm');
+Route::post('/login', 'LoginController@doLogin')->name('login');
+Route::get('/logout', 'LoginController@logout')->name('logout');
+
+Route::group([
+    'middleware' => 'customAuth'
+], function () {
+    Route::get('/', 'DashboardController@dashboard');
+
+ Route::prefix('employees')->group(function () {
+ Route::name('employee.')->group(function () {
+ Route::get('/', 'EmployeeController@index')->name('index');
+ Route::get('add', 'EmployeeController@add')->name('add');
+ Route::post('add', 'EmployeeController@add_process');
+    
+    });
+
 });
-
-Route::post('/Employee/doLogin','LoginController@dologin');
-
-
