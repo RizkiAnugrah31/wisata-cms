@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controller\LoginController;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -23,14 +20,13 @@ Route::get('/logout', 'LoginController@logout')->name('logout');
 Route::group([
     'middleware' => 'customAuth'
 ], function () {
-    Route::get('/', 'DashboardController@dashboard');
+    Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 
- Route::prefix('employees')->group(function () {
- Route::name('employee.')->group(function () {
- Route::get('/', 'EmployeeController@index')->name('index');
- Route::get('add', 'EmployeeController@add')->name('add');
- Route::post('add', 'EmployeeController@add_process');
-    
-    });
-
+    Route::get('contoh/data', 'ContohController@dataTable');
+    Route::get('contoh', 'ContohController@index')->name('contoh.index');
+    Route::get('contoh/create', 'ContohController@create')->name('contoh.create');
+    Route::post('contoh/create', 'ContohController@store')->name('contoh.store');
+    Route::get('contoh/detail/{id}', 'ContohController@edit')->name('contoh.edit');
+    Route::post('contoh/detail/{id}', 'ContohController@update')->name('contoh.update');
+    Route::get('contoh/delete/{id}', 'ContohController@destroy')->name('contoh.destroy');
 });

@@ -19,12 +19,13 @@ class LoginController extends Controller
                     'Content-Type' => ' application/json',
                 ],
                 'json' => [
-                    "client_key" => "android123",
-                    "secret_key" => "android123"
+                    "client_key" => "cms123",
+                    "secret_key" => "cms123"
                 ]
             ];
             $responseService = $client->request('POST', env('GATEWAY') . '/Credentials/login', $options);
             $response = json_decode($responseService->getBody()->getContents(), false);
+
 
             if ($response->success) {
                 Session::put('token', $response->data->secret_key);
@@ -32,7 +33,7 @@ class LoginController extends Controller
         }
 
         if (\request()->session()->has('Authorization')){
-            return redirect('/');
+            return redirect()->route('dashboard');
         }
 
         return view('auth.login');
@@ -57,10 +58,10 @@ class LoginController extends Controller
 
         if ($response->success) {
             Session::put('Authorization', $response->data->secret_key);
-            return redirect('/');
+            return redirect()->route('dashboard');
         }
 
-        return $request->all();
+        return redirect()->route('login');
     }
 
     public function logout()
