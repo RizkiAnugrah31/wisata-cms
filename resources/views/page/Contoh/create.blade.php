@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Create Contoh')
+
 @section('css')
 @endsection
+
 @section('content')
     <section class="content-header">
         <h1>
@@ -11,7 +13,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Manage Contoh</li>
+            <li class="active">Create Contoh</li>
         </ol>
     </section>
 
@@ -19,14 +21,37 @@
     <section class="content">
         <div class="box box-primary">
             <div class="box-header">
-                <h3 class="box-title">Manage Contoh</h3>
-
+                <h3 class="box-title">Create Contoh</h3>
             </div>
             <div class="box-body pad table-responsive">
+                <form action="{{ route('contoh.store') }}" method="post" id="userInput">
+                    {{ csrf_field() }}
+
+                    <div class="form-group has-feedback @if($errors->has('example_name')) has-error @endif">
+                        <label>Example Name</label>
+                        <input type="text" class="form-control" name="example_name">
+                        @if($errors->has('example_name'))
+                            @foreach($errors->get('example_name') as $message)
+                                <span class="text-red">{{$message}}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="form-group @if($errors->has('example_phone')) has-error @endif">
+                        <label>Example Phone</label>
+                        <input type="text" class="form-control " name="example_phone">
+                        @if($errors->has('example_phone'))
+                            @foreach($errors->get('example_phone') as $message)
+                                <span class="text-red">{{$message}}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                </form>
+
             </div>
             <div class="box-footer">
                 <div class="pull-right">
-                    <button class="btn btn-primary">submit</button>
+                    <a href="{{ route('contoh.index') }}" class="btn btn-default">Cancel</a>
+                    <button class="btn btn-primary" form="userInput">submit</button>
                 </div>
             </div>
             <!-- /.box -->
@@ -37,5 +62,4 @@
 @endsection
 
 @section('js')
-
 @endsection

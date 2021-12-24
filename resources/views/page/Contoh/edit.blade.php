@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Contoh')
+@section('title', 'Create Contoh')
+
 @section('css')
-    <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 @endsection
+
 @section('content')
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             Manage Contoh
@@ -13,7 +13,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Manage Contoh</li>
+            <li class="active">Edit Contoh</li>
         </ol>
     </section>
 
@@ -21,20 +21,38 @@
     <section class="content">
         <div class="box box-primary">
             <div class="box-header">
-                <h3 class="box-title">Manage Contoh</h3>
+                <h3 class="box-title">Edit Contoh</h3>
             </div>
             <div class="box-body pad table-responsive">
-                <table id="listData" class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th>Example Name</th>
-                        <th>Example Phone</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <form action="{{ route('contoh.update', $data->example_id) }}" method="post" id="userInput">
+                    {{ csrf_field() }}
 
+                    <div class="form-group has-feedback @if($errors->has('example_name')) has-error @endif">
+                        <label>Example Name</label>
+                        <input type="text" class="form-control" name="example_name" value="{{ $data->example_name }}">
+                        @if($errors->has('example_name'))
+                            @foreach($errors->get('example_name') as $message)
+                                <span class="text-red">{{$message}}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="form-group @if($errors->has('example_phone')) has-error @endif">
+                        <label>Example Phone</label>
+                        <input type="text" class="form-control " name="example_phone" value="{{ $data->example_phone }}">
+                        @if($errors->has('example_phone'))
+                            @foreach($errors->get('example_phone') as $message)
+                                <span class="text-red">{{$message}}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                </form>
+
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a href="{{ route('contoh.index') }}" class="btn btn-default">Cancel</a>
+                    <button class="btn btn-primary" form="userInput">submit</button>
+                </div>
             </div>
             <!-- /.box -->
         </div>
@@ -44,22 +62,4 @@
 @endsection
 
 @section('js')
-    <!-- DataTables -->
-    <script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script>
-        $('#listData').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: window.location.href + "/data",
-                timeout: 3000
-            },
-            columns: [
-                {data: 'example_name', name: 'example_name', orderable: false, defaultContent: ""},
-                {data: 'example_phone', name: 'example_phone', orderable: false, defaultContent: ""},
-                {data: 'action', name: 'action', orderable: false},
-            ]
-        })
-    </script>
 @endsection

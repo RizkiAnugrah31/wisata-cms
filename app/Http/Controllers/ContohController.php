@@ -11,7 +11,7 @@ class ContohController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class ContohController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
@@ -36,13 +36,15 @@ class ContohController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->only('example_name', 'example_phone'), [
+        $inputUser = $request->only('example_name', 'example_phone');
+
+        $validator = Validator::make($inputUser, [
             'example_name' => 'required',
-            'example_phone'=> 'required'
+            'example_phone' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('contoh.create');
+            return redirect()->route('contoh.create')->with('errors', $validator->getMessageBag());
         }
 
         $client = new Client();
@@ -51,9 +53,9 @@ class ContohController extends Controller
                 'Accept' => 'application/json',
                 'Content-Type' => ' application/json',
             ],
-            'json' => $request->only('example_name', 'example_phone')
+            'json' => $inputUser
         ];
-        $responseService = $client->request('GET', env('GATEWAY') . '/contoh', $options);
+        $responseService = $client->request('POST', env('GATEWAY') . '/contoh', $options);
         $response = json_decode($responseService->getBody()->getContents(), false);
 
         if (!$response->success) {
@@ -66,7 +68,7 @@ class ContohController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\Laravel\Lumen\Application
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit($id)
     {
@@ -79,7 +81,8 @@ class ContohController extends Controller
         ];
         $responseService = $client->request('GET', env('GATEWAY') . '/contoh/' . $id, $options);
         $response = json_decode($responseService->getBody()->getContents(), false);
-        dd($response);
+
+        return view('page.Contoh.edit', ['data' => $response->data]);
     }
 
     /**
@@ -91,7 +94,32 @@ class ContohController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inputUser = $request->only('example_name', 'example_phone');
+
+        $validator = Validator::make($inputUser, [
+            'example_name' => 'required',
+            'example_phone' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('contoh.edit', $id)->with('errors', $validator->getMessageBag());
+        }
+
+        $client = new Client();
+        $options = [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => ' application/json',
+            ],
+            'json' => $inputUser
+        ];
+        $responseService = $client->request('PUT', env('GATEWAY') . '/contoh/' . $id, $options);
+        $response = json_decode($responseService->getBody()->getContents(), false);
+
+        if (!$response->success) {
+            return redirect()->route('contoh.edit');
+        }
+        return redirect()->route('contoh.index');
     }
 
     /**
@@ -102,9 +130,27 @@ class ContohController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $client = new Client();
+        $options = [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => ' application/json',
+            ],
+        ];
+        $responseService = $client->request('DELETE', env('GATEWAY') . '/contoh/' . $id, $options);
+        $response = json_decode($responseService->getBody()->getContents(), false);
+
+        if (!$response->success) {
+            return redirect()->route('contoh.index');
+        }
+        return redirect()->route('contoh.index');
     }
 
+    /**
+     * Display a listing of the datatable
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function dataTable()
     {
         $client = new Client();
@@ -112,6 +158,11 @@ class ContohController extends Controller
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => ' application/json',
+            ],
+            'json' => [
+                'keyword' => \request()->get('search')['value'],
+                'limit' => \request()->get('length'),
+                'page' => \request()->get('start') / \request()->get('length') + 1
             ]
         ];
         $responseService = $client->request('GET', env('GATEWAY') . '/contoh', $options);
